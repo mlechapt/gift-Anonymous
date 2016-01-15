@@ -1,0 +1,20 @@
+{# src/giftBundle/Resources/views/Default/form.html.twig #}
+{% extends "giftBundle:Default:layout.html.twig" %}
+
+{% block body %}
+	<h2> Mes événements</h2>
+	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+		
+		{% if listEvents is defined %}
+			<h2> Mes événements</h2>
+				{% for event in listevents %}
+					 <li>
+					 	<a>{{ event.name }} : le {{ event.date }} </a>
+					</li>
+				{% endfor %}
+		{% else %}
+			<p>Vous n'avez pas encore d'événements créés.</p>
+		{% endif %}
+		<a class="btn btn-primary" href="createEvent">Créer un événement</a>
+	{% endif %}
+{% endblock %}

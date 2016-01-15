@@ -1,0 +1,12 @@
+gift_homepage:
+    path:     /
+    defaults: { _controller: giftBundle:Default:index }
+gift_register:
+    path:     /register
+    defaults: { _controller: giftBundle:Default:register}
+gift_createEvent:
+    path:     /new-event
+    defaults: { _controller: giftBundle:Default:createEvent }
+gift_myAccount:
+    path:     /my-account
+    defaults: { _controller: giftBundle:Default:myAccount }

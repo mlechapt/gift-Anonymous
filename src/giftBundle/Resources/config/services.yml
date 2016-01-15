@@ -1,0 +1,4 @@
+services:
+#    gift.example:
+#        class: giftBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

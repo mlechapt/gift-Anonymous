@@ -1,0 +1,17 @@
+{# src/giftBundle/Resources/views/Default/form.html.twig #}
+{% extends "giftBundle:Default:layout.html.twig" %}
+
+{% block body %}
+	<div>
+		{% for message in app.session.flashbag.get('info')%}
+			<p class="alert alert-danger">{{ message }}</p>
+		{% endfor %}
+	</div>
+
+	<div class="well">
+  		{{ form(form) }}
+	</div>
+
+{% endblock %}
+
+
