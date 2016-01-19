@@ -17,6 +17,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 class Event
 {
+    public function __construct()
+    {
+        $this->isDistributed=false;
+    }
+
     /**
      * @var int
      *
@@ -59,14 +64,15 @@ class Event
      *
      * @ORM\Column(name="is_distributed", type="boolean")
      */
-    private $is_distributed;
+    private $isDistributed;
+
 
     /**
      * @var string
      *
      * @ORM\Column(name="shared_token", type="string", length=255)
      */
-    private $shared_token;
+    private $sharedToken;
     
 
 
@@ -185,7 +191,7 @@ class Event
      */
     public function setIsDistributed($isDistributed)
     {
-        $this->is_distributed = $isDistributed;
+        $this->isDistributed = $isDistributed;
 
         return $this;
     }
@@ -197,7 +203,7 @@ class Event
      */
     public function getIsDistributed()
     {
-        return $this->is_distributed;
+        return $this->isDistributed;
     }
 
     /**
@@ -209,7 +215,7 @@ class Event
      */
     public function setSharedToken($sharedToken)
     {
-        $this->shared_token = $sharedToken;
+        $this->sharedToken = $sharedToken;
 
         return $this;
     }
@@ -221,7 +227,7 @@ class Event
      */
     public function getSharedToken()
     {
-        return $this->shared_token;
+        return $this->sharedToken;
     }
 
     /**
@@ -229,7 +235,18 @@ class Event
      *
      */
     public function createToken(){
-        return $this->setToken(md5(timestamp().rand(0,999999)))
-
+        return ($this->setToken(md5(time().rand(0,999999))));
     }
+
+
+    /**
+     * @ORM\PrePersist
+     *
+     */
+    public function createSharedToken(){
+        return ($this->setSharedToken(md5(time().rand(0,999999))));
+    }
+
 }
+
+

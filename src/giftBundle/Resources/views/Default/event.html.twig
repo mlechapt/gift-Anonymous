@@ -1,33 +1,21 @@
+{# src/giftBundle/Resources/views/Default/form.html.twig #}
 {% extends "giftBundle:Default:layout.html.twig" %}
 
-
-{% block title %}
-  Gift Anonymous - Accueil - {{ parent() }}
-  
-{% endblock %}
-
 {% block body %}
-	<div class="row">
-		<div id="menu" class="col-md-9">
-		 	<h2>Bienvenue sur Anonymous Gift!</h2>		 	
-		 	<p> Ici vous pouvez créer des noëls canadiens entre amis ou en famille !<p>
-		 	{% if is_granted('ROLE_USER') %}
-				{% if listEvents is defined %}
-					<h2> Mes événements</h2>
-						{% for event in listevents %}
-							 <li>
-							 	<a>{{ event.name }} : le {{ event.date }} </a>
-							</li>
-						{% endfor %}
-				{% else %}
-					<p>Vous n'avez pas encore d'événements créés.</p>
-				{% endif %}
-				<a class="btn btn-primary" href="createEvent">Créer un événement</a>
-			{% else %}
-				<a class="btn btn-primary" href="login" role="button">Se connecter </a>
-		 		<a class="btn btn-success" href="register" role="button">S'inscrire </a>
-			{% endif %}
-
-		</div>
-	</div>
+	<h2> Mes événements</h2>
+	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+		{% for event in event %}
+			<h4> {{ event.name }} : le {{ event.startdate|date('Y-m-d')  }}</h4>
+			<h5> Liste des participants : </h5>
+			<ul>
+			{% for guest in guests%}
+				<li> {{guest}}
+			{% endfor %}
+			</ul>
+			<div>
+				<a class="btn btn-success" href="{{ url('gift_invitation',{'token':token} ) }}">Inviter de nouvelles personnes</a>
+				<a class="btn btn-primary" href="{{ path('gift_myAccount') }}">Retour à tous les événements</a>
+			</div>
+		{% endfor %}
+	{% endif %}
 {% endblock %}

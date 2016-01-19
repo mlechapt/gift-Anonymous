@@ -1,0 +1,38 @@
+{# src/giftBundle/Resources/views/Default/form.html.twig #}
+
+{% extends "giftBundle:Default:layout.html.twig" %}
+
+{% block body %}
+<div>
+	{% for message in app.session.flashbag.get('info')%}
+		<p class="alert alert-danger">{{ message }}</p>
+	{% endfor %}
+</div>
+<div class="col-md-8">
+  {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {# Les erreurs générales du formulaire. #}
+    {{ form_errors(form) }}
+	    <div class="form-group">
+	      {# Date de l'envent#}
+	      {{ form_label(form.startdate, "Date de l'événement", {'label_attr': {'class': 'col-sm-5 control-label'}}) }}
+	      {{ form_errors(form.startdate) }}
+	      <div class="col-sm-6">
+	        {{ form_widget(form.startdate) }}
+	      </div>
+	    </div>
+	    {# Nom de l'event#}
+	    <div class="form-group">
+	      {{ form_label(form.name, "Nom de l'événement", {'label_attr': {'class': 'col-sm-5 control-label'}}) }}
+	      {{ form_errors(form.name) }}
+	      <div class="col-sm-6">
+	        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+	      </div>
+	    </div>
+	  	{# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+	  	<div class="col-sm-offset-5 col-sm-6">
+	  		{{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+	  	</div>
+	  	{{ form_rest(form) }}
+	  	{{ form_end(form) }}
+</div>
+{% endblock %}

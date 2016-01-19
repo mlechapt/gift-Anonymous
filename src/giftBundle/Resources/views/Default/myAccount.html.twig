@@ -4,17 +4,12 @@
 {% block body %}
 	<h2> Mes événements</h2>
 	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-		
-		{% if listEvents is defined %}
-			<h2> Mes événements</h2>
-				{% for event in listevents %}
+		{% for event in listEvents %}
 					 <li>
-					 	<a>{{ event.name }} : le {{ event.date }} </a>
+					 	<a href="event/{{ event.token }}">{{ event.name }}</a> : le {{ event.startdate|date('Y-m-d')  }}
 					</li>
 				{% endfor %}
-		{% else %}
-			<p>Vous n'avez pas encore d'événements créés.</p>
-		{% endif %}
-		<a class="btn btn-primary" href="createEvent">Créer un événement</a>
+
+		<a class="btn btn-primary" href="new-event">Créer un événement</a>
 	{% endif %}
 {% endblock %}

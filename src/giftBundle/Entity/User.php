@@ -12,8 +12,7 @@ use FOS\UserBundle\Model\User as BaseUser;
  * @ORM\Entity(repositoryClass="giftBundle\Repository\UserRepository")
  */
 class User extends BaseUser
-{
-        
+{  
     /**
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
@@ -26,7 +25,7 @@ class User extends BaseUser
         parent::__construct();
         // your own logic
     }
-
+    
     /**
      * @var string
      *
