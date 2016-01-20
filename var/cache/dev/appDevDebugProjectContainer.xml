@@ -17,6 +17,7 @@
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
       <parameter key="giftBundle">giftBundle\giftBundle</parameter>
       <parameter key="FOSUserBundle">FOS\UserBundle\FOSUserBundle</parameter>
+      <parameter key="userBundle">userBundle\userBundle</parameter>
       <parameter key="DebugBundle">Symfony\Bundle\DebugBundle\DebugBundle</parameter>
       <parameter key="WebProfilerBundle">Symfony\Bundle\WebProfilerBundle\WebProfilerBundle</parameter>
       <parameter key="SensioDistributionBundle">Sensio\Bundle\DistributionBundle\SensioDistributionBundle</parameter>
@@ -312,7 +313,7 @@
     <parameter key="fos_user.storage">orm</parameter>
     <parameter key="fos_user.firewall_name">main</parameter>
     <parameter key="fos_user.model_manager_name">null</parameter>
-    <parameter key="fos_user.model.user.class">giftBundle\Entity\User</parameter>
+    <parameter key="fos_user.model.user.class">userBundle\Entity\User</parameter>
     <parameter key="fos_user.profile.form.type">FOS\UserBundle\Form\Type\ProfileFormType</parameter>
     <parameter key="fos_user.profile.form.name">fos_user_profile_form</parameter>
     <parameter key="fos_user.profile.form.validation_groups" type="collection">
@@ -323,7 +324,7 @@
       <parameter key="webmaster@example.com">webmaster</parameter>
     </parameter>
     <parameter key="fos_user.registration.confirmation.enabled">false</parameter>
-    <parameter key="fos_user.registration.form.type">FOS\UserBundle\Form\Type\RegistrationFormType</parameter>
+    <parameter key="fos_user.registration.form.type">userBundle\Form\RegistrationType</parameter>
     <parameter key="fos_user.registration.form.name">fos_user_registration_form</parameter>
     <parameter key="fos_user.registration.form.validation_groups" type="collection">
       <parameter>Registration</parameter>
@@ -419,6 +420,9 @@
     </parameter>
   </parameters>
   <services>
+    <service id="app.form.registration" class="userBundle\Form\RegistrationType">
+      <tag name="form.type" alias="app_user_registration"/>
+    </service>
     <service id="controller_name_converter" class="Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser" public="false">
       <tag name="monolog.logger" channel="request"/>
       <argument type="service" id="kernel"/>
@@ -1174,6 +1178,7 @@
           <service class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension" public="false">
             <argument type="service" id="service_container"/>
             <argument type="collection">
+              <argument key="userBundle\Form\RegistrationType">app.form.registration</argument>
               <argument key="Symfony\Component\Form\Extension\Core\Type\FormType">form.type.form</argument>
               <argument key="Symfony\Component\Form\Extension\Core\Type\BirthdayType">form.type.birthday</argument>
               <argument key="Symfony\Component\Form\Extension\Core\Type\CheckboxType">form.type.checkbox</argument>
@@ -1870,7 +1875,7 @@
       <argument type="collection">
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>569e55b70af9d5.64164962</argument>
+            <argument>569ebec7d6b5a7.00719417</argument>
           </service>
         </argument>
         <argument type="service">
@@ -1884,7 +1889,7 @@
         </argument>
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>569e55b70af9d5.64164962</argument>
+            <argument>569ebec7d6b5a7.00719417</argument>
           </service>
         </argument>
       </argument>
@@ -2092,7 +2097,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>569e55b70af9d5.64164962</argument>
+            <argument>569ebec7d6b5a7.00719417</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -2209,7 +2214,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>569e55b70af9d5.64164962</argument>
+            <argument>569ebec7d6b5a7.00719417</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -2597,6 +2602,7 @@
           <call method="setEntityNamespaces">
             <argument type="collection">
               <argument key="giftBundle">giftBundle\Entity</argument>
+              <argument key="userBundle">userBundle\Entity</argument>
             </argument>
           </call>
           <call method="setMetadataCacheImpl">
@@ -2617,10 +2623,23 @@
                       <argument type="service" id="annotation_reader"/>
                       <argument type="collection">
                         <argument>/Users/martinlechaptois/Sites/anonymous-gift/src/giftBundle/Entity</argument>
+                        <argument>/Users/martinlechaptois/Sites/anonymous-gift/src/userBundle/Entity</argument>
                       </argument>
                     </service>
                   </argument>
                   <argument>giftBundle\Entity</argument>
+                </call>
+                <call method="addDriver">
+                  <argument type="service">
+                    <service class="Doctrine\ORM\Mapping\Driver\AnnotationDriver" public="false">
+                      <argument type="service" id="annotation_reader"/>
+                      <argument type="collection">
+                        <argument>/Users/martinlechaptois/Sites/anonymous-gift/src/giftBundle/Entity</argument>
+                        <argument>/Users/martinlechaptois/Sites/anonymous-gift/src/userBundle/Entity</argument>
+                      </argument>
+                    </service>
+                  </argument>
+                  <argument>userBundle\Entity</argument>
                 </call>
                 <call method="addDriver">
                   <argument type="service">
@@ -2767,12 +2786,12 @@
     </service>
     <service id="fos_user.profile.form.type" class="FOS\UserBundle\Form\Type\ProfileFormType">
       <tag name="form.type" alias="fos_user_profile"/>
-      <argument>giftBundle\Entity\User</argument>
+      <argument>userBundle\Entity\User</argument>
     </service>
     <service id="fos_user.registration.form.factory" class="FOS\UserBundle\Form\Factory\FormFactory">
       <argument type="service" id="form.factory"/>
       <argument>fos_user_registration_form</argument>
-      <argument>FOS\UserBundle\Form\Type\RegistrationFormType</argument>
+      <argument>userBundle\Form\RegistrationType</argument>
       <argument type="collection">
         <argument>Registration</argument>
         <argument>Default</argument>
@@ -2780,7 +2799,7 @@
     </service>
     <service id="fos_user.registration.form.type" class="FOS\UserBundle\Form\Type\RegistrationFormType">
       <tag name="form.type" alias="fos_user_registration"/>
-      <argument>giftBundle\Entity\User</argument>
+      <argument>userBundle\Entity\User</argument>
     </service>
     <service id="fos_user.change_password.form.factory" class="FOS\UserBundle\Form\Factory\FormFactory">
       <argument type="service" id="form.factory"/>
@@ -2793,7 +2812,7 @@
     </service>
     <service id="fos_user.change_password.form.type" class="FOS\UserBundle\Form\Type\ChangePasswordFormType">
       <tag name="form.type" alias="fos_user_change_password"/>
-      <argument>giftBundle\Entity\User</argument>
+      <argument>userBundle\Entity\User</argument>
     </service>
     <service id="fos_user.resetting.form.factory" class="FOS\UserBundle\Form\Factory\FormFactory">
       <argument type="service" id="form.factory"/>
@@ -2806,7 +2825,7 @@
     </service>
     <service id="fos_user.resetting.form.type" class="FOS\UserBundle\Form\Type\ResettingFormType">
       <tag name="form.type" alias="fos_user_resetting"/>
-      <argument>giftBundle\Entity\User</argument>
+      <argument>userBundle\Entity\User</argument>
     </service>
     <service id="fos_user.listener.resetting" class="FOS\UserBundle\EventListener\ResettingListener">
       <tag name="kernel.event_subscriber"/>
@@ -3095,7 +3114,7 @@
     </service>
     <service id="security.encoder_factory" class="Symfony\Component\Security\Core\Encoder\EncoderFactory">
       <argument type="collection">
-        <argument key="giftBundle\Entity\User" type="collection">
+        <argument key="userBundle\Entity\User" type="collection">
           <argument key="class">Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder</argument>
           <argument key="arguments" type="collection">
             <argument>sha512</argument>
@@ -3140,6 +3159,10 @@
       <call method="addPath">
         <argument>/Users/martinlechaptois/Sites/anonymous-gift/vendor/friendsofsymfony/user-bundle/Resources/views</argument>
         <argument>FOSUser</argument>
+      </call>
+      <call method="addPath">
+        <argument>/Users/martinlechaptois/Sites/anonymous-gift/src/userBundle/Resources/views</argument>
+        <argument>user</argument>
       </call>
       <call method="addPath">
         <argument>/Users/martinlechaptois/Sites/anonymous-gift/vendor/symfony/symfony/src/Symfony/Bundle/DebugBundle/Resources/views</argument>
@@ -3258,7 +3281,7 @@
           <factory service="doctrine" method="getManager"/>
         </service>
       </argument>
-      <argument>giftBundle\Entity\User</argument>
+      <argument>userBundle\Entity\User</argument>
     </service>
     <service id="session.storage" alias="session.storage.native"/>
     <service id="event_dispatcher" alias="debug.event_dispatcher"/>

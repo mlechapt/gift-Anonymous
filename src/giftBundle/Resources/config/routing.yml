@@ -1,9 +1,6 @@
 gift_homepage:
     path:     /
     defaults: { _controller: giftBundle:Default:index }
-gift_register:
-    path:     /giftregister
-    defaults: { _controller: giftBundle:Default:register}
 gift_createEvent:
     path:     /new-event
     defaults: { _controller: giftBundle:Default:createEvent }
@@ -11,14 +8,14 @@ gift_myAccount:
     path:     /my-account
     defaults: { _controller: giftBundle:Default:myAccount }
 gift_event:
-    path:     /event/{token}
+    path:     /event-detail/{token}
     defaults: { _controller: giftBundle:Default:displayEvent}
 gift_invitation:
     path:     /invitation/{token}
     defaults: { _controller: giftBundle:Default:invitation}
 gift_invited:
     path:     /event/{sharedToken}
-    defaults: { _controller: giftBundle:Default:validation}
+    defaults: { _controller: giftBundle:UserEvent:createUserEvent}
 gift_sendinvite:
     path:     /event/send_invitation
     defaults: { _controller: giftBundle:Default:sendInvitation}

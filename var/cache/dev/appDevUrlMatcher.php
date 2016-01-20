@@ -109,11 +109,6 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             return array (  '_controller' => 'giftBundle\\Controller\\DefaultController::indexAction',  '_route' => 'gift_homepage',);
         }
 
-        // gift_register
-        if ($pathinfo === '/register') {
-            return array (  '_controller' => 'giftBundle\\Controller\\DefaultController::registerAction',  '_route' => 'gift_register',);
-        }
-
         // gift_createEvent
         if ($pathinfo === '/new-event') {
             return array (  '_controller' => 'giftBundle\\Controller\\DefaultController::createEventAction',  '_route' => 'gift_createEvent',);
@@ -125,7 +120,7 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
         }
 
         // gift_event
-        if (0 === strpos($pathinfo, '/event') && preg_match('#^/event/(?P<token>[^/]++)$#s', $pathinfo, $matches)) {
+        if (0 === strpos($pathinfo, '/event-detail') && preg_match('#^/event\\-detail/(?P<token>[^/]++)$#s', $pathinfo, $matches)) {
             return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_event')), array (  '_controller' => 'giftBundle\\Controller\\DefaultController::displayEventAction',));
         }
 
@@ -137,7 +132,7 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
         if (0 === strpos($pathinfo, '/event')) {
             // gift_invited
             if (preg_match('#^/event/(?P<sharedToken>[^/]++)$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invited')), array (  '_controller' => 'giftBundle\\Controller\\DefaultController::validationAction',));
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invited')), array (  '_controller' => 'giftBundle\\Controller\\UserEventController::createUserEventAction',));
             }
 
             // gift_sendinvite

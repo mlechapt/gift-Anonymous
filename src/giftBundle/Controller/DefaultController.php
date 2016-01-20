@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
-use giftBundle\Entity\User;
+use userBundle\Entity\User;
 use giftBundle\Entity\UserEvent;
 use giftBundle\Entity\Event;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -28,50 +28,6 @@ class DefaultController extends Controller
       return $this->redirectToRoute('gift_myAccount');
     }
 
-    public function registerAction(Request $request)
-    { 
-      //si l'utilisateur est déjà connecté
-      if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {  
-        return $this->redirectToRoute('gift_myAccount');
-    }
-      // On crée un objet User
-      $user = new User();
-
-    // formulaire de création de compte
-    $form=$this->createFormBuilder($user)
-      ->add('username',TextType::class)
-      ->add('firstname',TextType::class)
-      ->add('password',PasswordType::class)
-      ->add('email',TextType::class)
-      ->add('save',SubmitType::class)
-      ->getForm()
-        ;
-
-    $form->handleRequest($request);
-
-    // On vérifie que les valeurs entrées sont correctes
-    if ($form->isValid()) {
-      // On l'enregistre notre objet $user dans la base de données, par exemple
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($user);
-      $em->flush();
-
-      $request->getSession()->getFlashBag()->add('notice', 'Votre compte a bien été créé.');
-
-      $user=$this->getDoctrine()->getManager()->getRepository('giftBundle:User')->findOneBy(array('username'=>$form->get('username')->getData()));
-
-      $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-      $this->get('security.token_storage')->setToken($token);
-      // On redirige vers la page de visualisation du compte nouvellement créé
-      return $this->redirect($this->generateUrl('gift_myAccount', array('user' => $user)));
-    }
-
-      return $this->render('giftBundle:Security:register.html.twig', array(
-      'form' => $form->createView(),
-      
-    ));
-    }
-
     public function createEventAction(Request $request)
     {
        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -79,7 +35,7 @@ class DefaultController extends Controller
         $session=$request->getSession();
         $session->getFlashBag()->add('info','Vous devez être connecté pour créer un événement! ');
 
-        return $this->redirectToRoute('gift_register');
+        return $this->redirectToRoute("fos_user_registration_register");
     }
 
     // On crée un objet Event
@@ -104,6 +60,7 @@ class DefaultController extends Controller
       $em->persist($event);
       $em->flush();
 
+      $session=$request->getSession();
       $session->getFlashBag()->add('notice', "L'événement a bien été créé.");
 
       // On redirige vers la page de visualisation du compte nouvellement créé
@@ -124,7 +81,7 @@ class DefaultController extends Controller
         $session=$request->getSession();
         $session->getFlashBag()->add('info',"Vous n'avez pas accès à cette page ! Inscrivez-vous pour continuer.");
 
-        return $this->redirectToRoute('gift_register');
+        return $this->redirectToRoute('register');
       }
 
     //récupération de l'id du user actif
@@ -144,7 +101,7 @@ class DefaultController extends Controller
 
     }
 
-  public function loginAction(Request $request)
+  /*public function loginAction(Request $request)
   {
     // Si le visiteur est déjà identifié, on le redirige vers l'accueil
     if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -157,10 +114,13 @@ class DefaultController extends Controller
       'last_username' => $authenticationUtils->getLastUsername(),
       'error'         => $authenticationUtils->getLastAuthenticationError(),
     ));
-  }
+  }*/
 
   public function displayEventAction(Request $request, $token){
-    
+    if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+      return $this->redirectToRoute('gift_createEvent');
+    }
+
     $repository = $this->getDoctrine()->getManager()->getRepository('giftBundle:Event');
 
     $event=$repository->findBy(array('token'=>$token));
@@ -179,8 +139,9 @@ class DefaultController extends Controller
     $repository = $this->getDoctrine()->getManager();
 
     $user=$this->get('security.token_storage')->getToken()->getUser();
-    $user=$repository->getRepository('giftBundle:User')->find($user);
+    $user=$repository->getRepository('userBundle:User')->find($user);
     $event=$repository->getRepository('giftBundle:Event')->findOneBy(array('token'=>$token));
+    
     $urlHome=$this->generateUrl('gift_homepage', array(), UrlGeneratorInterface::ABSOLUTE_URL);
     $urlShare=$this->generateUrl('gift_invited', array('sharedToken' => $event->getSharedToken()), UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -241,9 +202,9 @@ class DefaultController extends Controller
 
   public function validationAction(Request $request, $sharedToken){
     if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-      return $this->redirectToRoute('gift_register',array('sharedToken'=>$sharedToken));
+      return $this->redirectToRoute('register',array('sharedToken'=>$sharedToken));
     }
-
+      return $this->redirectToRoute('gift_invited',array('sharedToken'=>$sharedToken));
   }
 
 }

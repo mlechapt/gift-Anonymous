@@ -22,7 +22,7 @@ class UserEvent
     private $id;
 
     /**
-    * @ORM\OneToOne(targetEntity="giftBundle\Entity\User", cascade={"persist"})
+    * @ORM\OneToOne(targetEntity="userBundle\Entity\User", cascade={"persist"})
     */
     private $user;
 
@@ -32,7 +32,7 @@ class UserEvent
     private $event;
 
     /**
-    * @ORM\OneToOne(targetEntity="giftBundle\Entity\User", cascade={"persist"})
+    * @ORM\OneToOne(targetEntity="userBundle\Entity\User", cascade={"persist"})
     */
     private $received_user;
 
@@ -49,11 +49,11 @@ class UserEvent
     /**
      * Set user
      *
-     * @param \giftBundle\Entity\User $user
+     * @param \userBundle\Entity\User $user
      *
      * @return UserEvent
      */
-    public function setUser(\giftBundle\Entity\User $user = null)
+    public function setUser(\userBundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -63,7 +63,7 @@ class UserEvent
     /**
      * Get user
      *
-     * @return \giftBundle\Entity\User
+     * @return \userBundle\Entity\User
      */
     public function getUser()
     {
@@ -97,11 +97,11 @@ class UserEvent
     /**
      * Set receivedUser
      *
-     * @param \giftBundle\Entity\User $receivedUser
+     * @param \userBundle\Entity\User $receivedUser
      *
      * @return UserEvent
      */
-    public function setReceivedUser(\giftBundle\Entity\User $receivedUser = null)
+    public function setReceivedUser(\userBundle\Entity\User $receivedUser = null)
     {
         $this->received_user = $receivedUser;
 
@@ -111,7 +111,7 @@ class UserEvent
     /**
      * Get receivedUser
      *
-     * @return \giftBundle\Entity\User
+     * @return \userBundle\Entity\User
      */
     public function getReceivedUser()
     {

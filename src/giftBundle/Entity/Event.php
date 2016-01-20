@@ -47,7 +47,7 @@ class Event
 
 
     /**
-    * @ORM\ManyToOne(targetEntity="giftBundle\Entity\User", cascade={"persist"})
+    * @ORM\ManyToOne(targetEntity="userBundle\Entity\User", cascade={"persist"})
     * @ORM\JoinColumn(nullable=false)
     */
     private $owner;
@@ -70,7 +70,7 @@ class Event
     /**
      * @var string
      *
-     * @ORM\Column(name="shared_token", type="string", length=255)
+     * @ORM\Column(name="sharedToken", type="string", length=255)
      */
     private $sharedToken;
     
@@ -137,11 +137,11 @@ class Event
     /**
      * Set owner
      *
-     * @param \giftBundle\Entity\User $owner
+     * @param \userBundle\Entity\User $owner
      *
      * @return Event
      */
-    public function setOwner(\giftBundle\Entity\User $owner = null)
+    public function setOwner(\userBundle\Entity\User $owner = null)
     {
         $this->owner = $owner;
 
@@ -151,7 +151,7 @@ class Event
     /**
      * Get owner
      *
-     * @return \giftBundle\Entity\User
+     * @return \userBundle\Entity\User
      */
     public function getOwner()
     {
@@ -248,5 +248,3 @@ class Event
     }
 
 }
-
-
