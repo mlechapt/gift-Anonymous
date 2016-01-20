@@ -2,14 +2,20 @@
 {% extends "giftBundle:Default:layout.html.twig" %}
 
 {% block body %}
-	<h2> Mes événements</h2>
-	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-		{% for event in listEvents %}
-					 <li>
-					 	<a href="event-detail/{{ event.token }}">{{ event.name }}</a> : le {{ event.startdate|date('Y-m-d')  }}
-					</li>
-				{% endfor %}
-
-		<a class="btn btn-primary" href="new-event">Créer un événement</a>
+	<h4> Mes événements créés </h4>	
+	{% if listEvents is empty %}
+		Vous n'avez créé aucun événement
 	{% endif %}
+	{% for event in listEvents %}
+		<li><a href="event-detail/{{ event.token }}">{{ event.name }}</a> : le {{ event.startdate|date('Y-m-d')  }}</li>
+	{% endfor %}
+	<a class="btn btn-primary" href="new-event">Créer un événement</a>
+
+	<h4> Les événements auxquels je participe </h4>
+	{% if listInvitedEvents is empty %}
+		Vous êtes invité à aucun d'événement
+	{% endif %}
+	{% for event in listInvitedEvents %}
+		<li><a href="event-detail/{{ event.event.token }}">{{ event.event.name }}</a> : le {{ event.event.startdate|date('Y-m-d')  }}</li>
+	{% endfor %}
 {% endblock %}

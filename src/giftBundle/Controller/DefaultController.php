@@ -35,17 +35,17 @@ class DefaultController extends Controller
         $session=$request->getSession();
         $session->getFlashBag()->add('info','Vous devez être connecté pour créer un événement! ');
 
-        return $this->redirectToRoute("fos_user_registration_register");
+        return $this->redirectToRoute("fos_user_security_login");
     }
 
     // On crée un objet Event
      $event = new Event();
 
-    // formulaire de création de compte
+    // formulaire de création d'événement
     $form=$this->createFormBuilder($event)
-      ->add('startdate',DateType::class)
-      ->add('name',TextType::class)
-      ->add('save',SubmitType::class)
+      ->add(   'startdate',  DateType::class)
+      ->add(   'name',       TextType::class)
+      ->add(   'save',       SubmitType::class)
       ->getForm()
         ;
     
@@ -60,8 +60,7 @@ class DefaultController extends Controller
       $em->persist($event);
       $em->flush();
 
-      $session=$request->getSession();
-      $session->getFlashBag()->add('notice', "L'événement a bien été créé.");
+      $session=$request->getSession()->getFlashBag()->add('notice', "L'événement a bien été créé.");
 
       // On redirige vers la page de visualisation du compte nouvellement créé
       return $this->redirect($this->generateUrl('gift_invitation', array(
@@ -80,57 +79,44 @@ class DefaultController extends Controller
       // Sinon on redirige vers le formulaire de création de compte
         $session=$request->getSession();
         $session->getFlashBag()->add('info',"Vous n'avez pas accès à cette page ! Inscrivez-vous pour continuer.");
-
         return $this->redirectToRoute('register');
       }
 
     //récupération de l'id du user actif
     $user = $this->get('security.token_storage')->getToken()->getUser();
+  
+    $em = $this->getDoctrine()->getManager();
 
-    // On récupère la liste des candidatures de cette annonce
-    $repository = $this->getDoctrine()->getManager()->getRepository('giftBundle:Event');
-      
-
-    $listEvents=$repository->findBy(
+    $listEvents=$em->getRepository('giftBundle:Event')->findBy(
           array('owner'=>$user)
           );
-
+    $listInvitedEvents=$em->getRepository('giftBundle:UserEvent')->findBy(
+          array('user'=>$user)
+          );
       //var_dump($listEvents);
       //die; 
-      return $this->render('giftBundle:Default:myAccount.html.twig',array('listEvents'=>$listEvents));
+      return $this->render('giftBundle:Default:myAccount.html.twig',array(
+            'listEvents'=>$listEvents,
+            'listInvitedEvents'=>$listInvitedEvents
+            ));
 
     }
-
-  /*public function loginAction(Request $request)
-  {
-    // Si le visiteur est déjà identifié, on le redirige vers l'accueil
-    if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-      return $this->redirectToRoute('gift_myAccount');
-    }
-    
-    $authenticationUtils = $this->get('security.authentication_utils');
-
-    return $this->render('giftBundle:Security:login.html.twig', array(
-      'last_username' => $authenticationUtils->getLastUsername(),
-      'error'         => $authenticationUtils->getLastAuthenticationError(),
-    ));
-  }*/
 
   public function displayEventAction(Request $request, $token){
     if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
       return $this->redirectToRoute('gift_createEvent');
     }
 
-    $repository = $this->getDoctrine()->getManager()->getRepository('giftBundle:Event');
-
-    $event=$repository->findBy(array('token'=>$token));
-
-    $listGuests=array('charles','benjamin','martin','jeremy','louis','xavier','thomas');
+    $em = $this->getDoctrine()->getManager();
+    $event=$em->getRepository('giftBundle:Event')->findBy(array('token'=>$token));
+    $userEvents=$em->getRepository('giftBundle:UserEvent')->findBy(array('event'=>$event));
+    $user = $this->get('security.token_storage')->getToken()->getUser();
 
     return $this->render('giftBundle:Default:event.html.twig', array(
       'token' => $token,
       'event' => $event,
-      'guests' => $listGuests
+      'user' => $user,
+      'userEvents' => $userEvents
       ));
   }
 

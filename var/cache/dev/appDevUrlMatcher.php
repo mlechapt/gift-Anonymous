@@ -129,17 +129,9 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invitation')), array (  '_controller' => 'giftBundle\\Controller\\DefaultController::invitationAction',));
         }
 
-        if (0 === strpos($pathinfo, '/event')) {
-            // gift_invited
-            if (preg_match('#^/event/(?P<sharedToken>[^/]++)$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invited')), array (  '_controller' => 'giftBundle\\Controller\\UserEventController::createUserEventAction',));
-            }
-
-            // gift_sendinvite
-            if ($pathinfo === '/event/send_invitation') {
-                return array (  '_controller' => 'giftBundle\\Controller\\DefaultController::sendInvitationAction',  '_route' => 'gift_sendinvite',);
-            }
-
+        // gift_invited
+        if (0 === strpos($pathinfo, '/event') && preg_match('#^/event/(?P<sharedToken>[^/]++)$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invited')), array (  '_controller' => 'giftBundle\\Controller\\UserEventController::createUserEventAction',));
         }
 
         if (0 === strpos($pathinfo, '/log')) {

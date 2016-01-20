@@ -16,6 +16,3 @@ gift_invitation:
 gift_invited:
     path:     /event/{sharedToken}
     defaults: { _controller: giftBundle:UserEvent:createUserEvent}
-gift_sendinvite:
-    path:     /event/send_invitation
-    defaults: { _controller: giftBundle:Default:sendInvitation}

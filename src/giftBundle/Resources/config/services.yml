@@ -1,4 +1,9 @@
 services:
+#    gift_user.user_registration:
+#        class: giftBundle\EventListener\UserRegistrationRedirect
+#        arguments: ["sharedtoken"]
+#        tags:
+#            - {name: kernel.event_listener, event: kernel.controller}
 #    gift.example:
 #        class: giftBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]

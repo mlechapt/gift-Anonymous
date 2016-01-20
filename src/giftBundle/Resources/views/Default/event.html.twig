@@ -3,19 +3,21 @@
 
 {% block body %}
 	<h2> Mes événements</h2>
-	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-		{% for event in event %}
-			<h4> {{ event.name }} : le {{ event.startdate|date('Y-m-d')  }}</h4>
-			<h5> Liste des participants : </h5>
-			<ul>
-			{% for guest in guests%}
-				<li> {{guest}}
+	{% for event in event %}
+		<h4> {{ event.name }} : le {{ event.startdate|date('Y-m-d')  }}</h4>
+		<h5> Liste des participants : </h5>
+		<ul>
+			{% for userEvent in userEvents %}
+				{% for user in userEvent %}
+				<li> {{ user.username }} {{ user.firstname }} </li>
+				{% endfor %}
 			{% endfor %}
-			</ul>
-			<div>
-				<a class="btn btn-success" href="{{ url('gift_invitation',{'token':token} ) }}">Inviter de nouvelles personnes</a>
-				<a class="btn btn-primary" href="{{ path('gift_myAccount') }}">Retour à tous les événements</a>
-			</div>
-		{% endfor %}
-	{% endif %}
+		</ul>
+		<div>
+			{% if event.owner.id == user.id %}
+				<a class="btn btn-success" href="{{ url('gift_invitation',{'token':event.token} ) }}">Inviter de nouvelles personnes</a>
+			{% endif %}
+			<a class="btn btn-primary" href="{{ path('gift_myAccount') }}">Retour à tous les événements</a>
+		</div>
+	{% endfor %}
 {% endblock %}

@@ -21,7 +21,7 @@ class UserEventController extends Controller
 {
     public function createUserEventAction(Request $request, $sharedToken){
       if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-      return $this->redirectToRoute('fos_user_registration_register',array("sharedToken"=>$sharedToken));
+      return $this->redirectToRoute('fos_user_security_login',array("sharedToken"=>$sharedToken));
       }
 
       $em=$this->getDoctrine()->getManager();
@@ -39,7 +39,7 @@ class UserEventController extends Controller
       $session->getFlashBag()->add('notice', "Vous avez été ajouté à l'événement.");
 
       // On redirige vers la page de visualisation des event
-      return $this->redirect($this->generateUrl('gift_myAccount'));
+      return $this->redirect($this->generateUrl('gift_myAccount',array('session'=>$session)));
     }
 
 }
