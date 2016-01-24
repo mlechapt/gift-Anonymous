@@ -25,12 +25,12 @@ class UserEventController extends Controller
       }
 
       $em=$this->getDoctrine()->getManager();
-      $eventId=$em->getRepository('giftBundle:Event')->findOneBy(array('sharedToken'=>$sharedToken));
+      $event=$em->getRepository('giftBundle:Event')->findOneBy(array('sharedToken'=>$sharedToken));
 
       // On crée un objet UserEvent
       $userEvent = new UserEvent();
       $userEvent->setUser($this->getUser());
-      $userEvent->setEvent($eventId);
+      $userEvent->setEvent($event);
 
       $em->persist($userEvent);
       $em->flush();

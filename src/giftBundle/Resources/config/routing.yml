@@ -16,3 +16,6 @@ gift_invitation:
 gift_invited:
     path:     /event/{sharedToken}
     defaults: { _controller: giftBundle:UserEvent:createUserEvent}
+gift_repartition:
+    path:     /event-repartition/{token}
+    defaults: { _controller: giftBundle:Algorithme:repartition}

@@ -5,17 +5,30 @@
 	<h4> Mes événements créés </h4>	
 	{% if listEvents is empty %}
 		Vous n'avez créé aucun événement
+	{% else %}
+		{% for event in listEvents %}
+			<li><a href="event-detail/{{ event.token }}">{{ event.name }}</a> : le {{ event.startdate|date('Y-m-d')  }}</li>
+		{% endfor %}
 	{% endif %}
-	{% for event in listEvents %}
-		<li><a href="event-detail/{{ event.token }}">{{ event.name }}</a> : le {{ event.startdate|date('Y-m-d')  }}</li>
-	{% endfor %}
-	<a class="btn btn-primary" href="new-event">Créer un événement</a>
 
 	<h4> Les événements auxquels je participe </h4>
 	{% if listInvitedEvents is empty %}
 		Vous êtes invité à aucun d'événement
+	{% else %}
+		{% for event in listInvitedEvents %}
+			<li><a href="event-detail/{{ event.event.token }}">{{ event.event.name }}</a> : le {{ event.event.startdate|date('Y-m-d')  }}</li>
+		{% endfor %}
 	{% endif %}
-	{% for event in listInvitedEvents %}
-		<li><a href="event-detail/{{ event.event.token }}">{{ event.event.name }}</a> : le {{ event.event.startdate|date('Y-m-d')  }}</li>
-	{% endfor %}
+
+	{% if listInvitedEvents is empty %}
+	{% else %}
+	<h4> Événements clôturés </h4>
+		{% for event in listClosedEvents %}
+			
+			<li><a href="event-detail/{{ event.token }}">{{ event.name }}</a> : le {{ event.startdate|date('Y-m-d')  }}</li>
+		{% endfor %}
+	{% endif %}
+
+	<br/>
+	<a class="btn btn-success" href="new-event">Créer un événement</a>
 {% endblock %}

@@ -22,17 +22,17 @@ class UserEvent
     private $id;
 
     /**
-    * @ORM\OneToOne(targetEntity="userBundle\Entity\User", cascade={"persist"})
+    * @ORM\ManyToOne(targetEntity="userBundle\Entity\User", cascade={"persist"})
     */
     private $user;
 
     /**
-    * @ORM\OneToOne(targetEntity="giftBundle\Entity\Event", cascade={"persist"})
+    * @ORM\ManyToOne(targetEntity="giftBundle\Entity\Event", cascade={"persist"})
     */
     private $event;
 
     /**
-    * @ORM\OneToOne(targetEntity="userBundle\Entity\User", cascade={"persist"})
+    * @ORM\ManyToOne(targetEntity="userBundle\Entity\User", cascade={"persist"})
     */
     private $received_user;
 

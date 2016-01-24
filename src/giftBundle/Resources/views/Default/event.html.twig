@@ -3,21 +3,38 @@
 
 {% block body %}
 	<h2> Mes événements</h2>
-	{% for event in event %}
 		<h4> {{ event.name }} : le {{ event.startdate|date('Y-m-d')  }}</h4>
+		<h6>Administrateur: 
+			{% if event.owner.username == user.username %} 
+				Vous
+			{% else %}
+				{{event.owner.username}} {{event.owner.firstname}} 
+			{% endif %}
+			</h6>
+		{% if event.isDistributed == 1 %}
+			La personne a qui vous devez faire un cadeau est : {{gifted.username}} {{gifted.firstname}}
+		{% endif %} 
 		<h5> Liste des participants : </h5>
 		<ul>
-			{% for userEvent in userEvents %}
-				{% for user in userEvent %}
-				<li> {{ user.username }} {{ user.firstname }} </li>
+			{% if userEvents is empty %}
+				Aucun participant n'a validé son invitation.
+			{% else %}
+				{% for userEvent in userEvents %}
+					{% if userEvent.user.username == user.username %} 
+						<li>Vous</li>
+					{% else %}
+						<li> {{ userEvent.user.username }} {{ userEvent.user.firstname }} </li>
+					{% endif %}
 				{% endfor %}
-			{% endfor %}
+			{% endif %}
 		</ul>
 		<div>
-			{% if event.owner.id == user.id %}
+			{% if (event.owner.id == user.id) and (event.isDistributed == false) %}
+				<a class="btn btn-success" href="{{ url('gift_repartition',{'token':event.token} ) }}">Lancer la répartition</a>
 				<a class="btn btn-success" href="{{ url('gift_invitation',{'token':event.token} ) }}">Inviter de nouvelles personnes</a>
+			{% elseif (event.owner.id == user.id) and (event.isDistributed == true) %}
+				<div class="alert alert-success">La répartition a été faite. Bon échange de cadeaux ! </div>
 			{% endif %}
 			<a class="btn btn-primary" href="{{ path('gift_myAccount') }}">Retour à tous les événements</a>
 		</div>
-	{% endfor %}
 {% endblock %}

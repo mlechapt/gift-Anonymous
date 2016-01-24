@@ -62,6 +62,13 @@ class DefaultController extends Controller
 
       $session=$request->getSession()->getFlashBag()->add('notice', "L'événement a bien été créé.");
 
+      //ajout dans la base user event pour la répartition
+      $userEvent = new UserEvent();
+      $userEvent->setUser($this->getUser());
+      $userEvent->setEvent($event);
+      $em->persist($userEvent);
+      $em->flush();
+
       // On redirige vers la page de visualisation du compte nouvellement créé
       return $this->redirect($this->generateUrl('gift_invitation', array(
                   'id' => $event->getId(),
@@ -88,16 +95,20 @@ class DefaultController extends Controller
     $em = $this->getDoctrine()->getManager();
 
     $listEvents=$em->getRepository('giftBundle:Event')->findBy(
-          array('owner'=>$user)
+          array('owner'=>$user,'isDistributed'=>'0')
           );
     $listInvitedEvents=$em->getRepository('giftBundle:UserEvent')->findBy(
           array('user'=>$user)
+          );
+    $listClosedEvents=$em->getRepository('giftBundle:Event')->findBy(
+          array('owner'=>$user,'isDistributed'=>'1')
           );
       //var_dump($listEvents);
       //die; 
       return $this->render('giftBundle:Default:myAccount.html.twig',array(
             'listEvents'=>$listEvents,
-            'listInvitedEvents'=>$listInvitedEvents
+            'listInvitedEvents'=>$listInvitedEvents,
+            'listClosedEvents'=>$listClosedEvents
             ));
 
     }
@@ -108,15 +119,17 @@ class DefaultController extends Controller
     }
 
     $em = $this->getDoctrine()->getManager();
-    $event=$em->getRepository('giftBundle:Event')->findBy(array('token'=>$token));
+    $event=$em->getRepository('giftBundle:Event')->findOneBy(array('token'=>$token));
     $userEvents=$em->getRepository('giftBundle:UserEvent')->findBy(array('event'=>$event));
     $user = $this->get('security.token_storage')->getToken()->getUser();
-
+    $gifted=$em->getRepository('giftBundle:UserEvent')->findOneBy(array('user'=>$user));
+    $gifted=$gifted->getReceivedUser();
     return $this->render('giftBundle:Default:event.html.twig', array(
       'token' => $token,
       'event' => $event,
       'user' => $user,
-      'userEvents' => $userEvents
+      'userEvents' => $userEvents,
+      'gifted'=>$gifted
       ));
   }
 
@@ -191,6 +204,11 @@ class DefaultController extends Controller
       return $this->redirectToRoute('register',array('sharedToken'=>$sharedToken));
     }
       return $this->redirectToRoute('gift_invited',array('sharedToken'=>$sharedToken));
+  }
+
+  public function repartitionAction(Request $request, $token){
+    
+    
   }
 
 }

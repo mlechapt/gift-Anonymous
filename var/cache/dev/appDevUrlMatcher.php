@@ -129,9 +129,17 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invitation')), array (  '_controller' => 'giftBundle\\Controller\\DefaultController::invitationAction',));
         }
 
-        // gift_invited
-        if (0 === strpos($pathinfo, '/event') && preg_match('#^/event/(?P<sharedToken>[^/]++)$#s', $pathinfo, $matches)) {
-            return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invited')), array (  '_controller' => 'giftBundle\\Controller\\UserEventController::createUserEventAction',));
+        if (0 === strpos($pathinfo, '/event')) {
+            // gift_invited
+            if (preg_match('#^/event/(?P<sharedToken>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_invited')), array (  '_controller' => 'giftBundle\\Controller\\UserEventController::createUserEventAction',));
+            }
+
+            // gift_repartition
+            if (0 === strpos($pathinfo, '/event-repartition') && preg_match('#^/event\\-repartition/(?P<token>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'gift_repartition')), array (  '_controller' => 'giftBundle\\Controller\\AlgorithmeController::repartitionAction',));
+            }
+
         }
 
         if (0 === strpos($pathinfo, '/log')) {
